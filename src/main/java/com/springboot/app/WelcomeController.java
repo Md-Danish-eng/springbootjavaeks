@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class WelcomeController {
  @GetMapping("/welcome")
 	public String welcome() {
-	 return "ALHAMDULLILAH i did it, sukran yaa rab";
+	 return "Hurray!!! I successfully deploy java app on eks cluster using jenkins ci/cd pipeline";
  }
 }
