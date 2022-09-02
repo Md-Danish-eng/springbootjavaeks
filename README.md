@@ -29,21 +29,21 @@ Select this ```Ubuntu Server 20.04 LTS (HVM), SSD Volume Type```
 
 ![image](https://user-images.githubusercontent.com/85988020/187845138-a4572857-6973-4b1e-b924-742992b24c66.png)
 
-Select the Free tier and cick on  Next:configure insatnce Details
+Select the "t3.medium" and cick on  Next:configure insatnce Details
 
-![image](https://user-images.githubusercontent.com/85988020/187845410-4e96fc43-79f7-41ed-add4-515444ecdd20.png)
+![image](https://user-images.githubusercontent.com/85988020/188131393-112e49e8-70b7-455b-96f9-b8d75c6aa47b.png)
 
 Keep everything default and click on ```add storage```
 
-![image](https://user-images.githubusercontent.com/85988020/187845669-2dbe88f9-00c6-4ead-b609-5e0c19657e6c.png)
+![image](https://user-images.githubusercontent.com/85988020/188131650-dec0809c-fdc3-415a-bad6-c168ec93bfc6.png)
 
 Keep everything default and click on ```Next: Add Tags```
 
-![image](https://user-images.githubusercontent.com/85988020/187847261-a895ba3b-b1ca-46d8-8289-3d4be5cfd66d.png)
+![image](https://user-images.githubusercontent.com/85988020/188131984-d27eb40d-9552-4d97-b1a4-b9f8538099a4.png)
 
  #Here you can add the tags of your instance.
 
-![image](https://user-images.githubusercontent.com/85988020/187847070-e349c87a-b52b-4310-8729-4001a3050760.png)
+![image](https://user-images.githubusercontent.com/85988020/187847261-a895ba3b-b1ca-46d8-8289-3d4be5cfd66d.png)
 
 #Here you can add security rules, in my case i choose ``All traffic rules allow``` after that click on ```Review and Launch```
 
@@ -53,7 +53,59 @@ From here you can review your instance and click on launch
 
 ![image](https://user-images.githubusercontent.com/85988020/187848296-fd1ff808-168a-4b17-bbed-ecdf55430ca9.png)
 
+Here Choose the existing key or create a new key and click on launch instance.
 
+![image](https://user-images.githubusercontent.com/85988020/188130515-8d726a9d-5ca6-4e05-90c3-9988cb806d8e.png)
+
+Now check the AWS console your instance is showing here.
+
+![image](https://user-images.githubusercontent.com/85988020/188130787-da310a5f-66d7-457c-990d-53706746d1ad.png)
+
+Do SSH on server and Install EKS by following command:
+
+Install eksctl by run ```curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp```
+
+```sudo mv /tmp/eksctl /usr/local/bin```
+
+```eksctl version```
+
+```curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/kubectl```
+
+```chmod +x ./kubectl```
+``mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin```
+```echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc```
+```kubectl version --short --client```
+```eksctl create cluster --name java-poc --region ap-south-1 --version 1.21 --nodegroup-name linux-nodes --node-type t2.medium --nodes 2```
+Install awscli by run the following commands:
+
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+ unzip awscliv2.zip
+sudo apt install unzip
+unzip awscliv2.zip
+ sudo ./aws/install
+
+Install docker by run the following commands:
+
+sudo apt update
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+ sudo apt install docker-ce
+sudo systemctl status docker
+
+
+sudo apt update
+ sudo apt install openjdk-11-jdk
+ wget -p -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
+sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+sudo apt install jenkins
+sudo systemctl start jenkins
+sudo systemctl status jenkins
+Go to the console and copy the public ip and hit in the browser with port 8080
+It will ask for password
+Go to the server and run the command for password ```sudo cat /var/lib/jenkins/secrets/initialAdminPassword```
+
+copy and paste the password in the jenkins browser and click on 
 
 
 
