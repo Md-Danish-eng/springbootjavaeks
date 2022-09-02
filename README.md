@@ -110,3 +110,71 @@ copy and paste the password in the jenkins browser and click on
 
 
 
+
+Create a private ECR (Elastic Container Registry)
+
+![image](https://user-images.githubusercontent.com/85988020/188152096-794a4ec1-12d2-443a-81ba-0b7cd1988e94.png)
+
+After this it will look like this
+
+![image](https://user-images.githubusercontent.com/85988020/188152501-201bcf2f-94b9-4e60-bdfe-596095b6beae.png)
+
+
+Jenkins pipeline
+```
+pipeline {
+  environment {
+    registry = '646094415288.dkr.ecr.ap-south-1.amazonaws.com/java_poc'
+    registryCredential = 'AWS_POC'
+    dockerImage = '646094415288.dkr.ecr.ap-south-1.amazonaws.com/java_poc'
+  }
+    agent any    
+    stages {
+        stage('clone code') {
+            steps {
+               checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-creds', url: 'https://github.com/Md-Danish-eng/springbootjavaeks.git']]])
+            }
+        }    
+
+        stage('build') {
+            steps {
+              sh 'mvn clean install'
+              sh 'whoami'
+                
+            }
+        } 
+        stage('Building image') {
+            steps{
+                script {
+                     dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
+      }
+    }
+    
+        stage('push to ECR') {
+            steps {
+              sh 'aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 646094415288.dkr.ecr.ap-south-1.amazonaws.com'
+              sh 'docker build -t java_poc:$BUILD_NUMBER .'
+              sh 'docker tag java_poc:$BUILD_NUMBER 646094415288.dkr.ecr.ap-south-1.amazonaws.com/java_poc:$BUILD_NUMBER'
+              sh 'docker push 646094415288.dkr.ecr.ap-south-1.amazonaws.com/java_poc:$BUILD_NUMBER'
+                }
+        }
+
+        stage('Deploy eks') {
+            steps{
+                script {
+                    
+                    // sh 'kubectl rollout restart deployment spring-boot.yaml' 
+                    kubernetesDeploy(configs: "spring-boot.yaml", kubeconfigId: "kubernetes", enableConfigSubstitution: "true")
+
+        }
+      }
+    }
+  }  
+}
+```
+
+
+
+
+
