@@ -174,7 +174,170 @@ pipeline {
 }
 ```
 
+Type the username and Password for login
+
+![image](https://user-images.githubusercontent.com/85988020/188309686-51ba7be9-4c60-41d9-a79c-1f1fd290675c.png)
+
+Go to jenkins Dashboard and click on Manage Jenkins
+
+![image](https://user-images.githubusercontent.com/85988020/188309778-c6b7857f-34ee-4c54-8409-63d48726fab2.png)
+
+Then click on Manage plungins
+
+![image](https://user-images.githubusercontent.com/85988020/188309796-d7cfd17c-2296-4899-bd22-6fc4dabd07ac.png)
+
+In the Available section search the following plugins  ```ECR``` ```maven``` ```kubernetes continuous deployment```
+
+![image](https://user-images.githubusercontent.com/85988020/188309823-1a822c76-ef14-457f-935c-f17970648f8f.png)
+
+After select the plugins click on Install and restart 
+
+![image](https://user-images.githubusercontent.com/85988020/188309896-f33f53ef-e7ae-4cc9-b6c7-4a6b5c698593.png)
+
+Note: For ```kubernetes continuous deployment``` click on Advance option and scroll down
+
+![image](https://user-images.githubusercontent.com/85988020/188309959-97c8cab5-a884-4264-b780-fae36d3feeb2.png)
+
+From here we can install custom plugin by click choose file and after that click on deploy. The plugins will be installed.
+
+![image](https://user-images.githubusercontent.com/85988020/188310006-5f15a45e-f8e1-4ab4-b4f5-b13532fd124b.png)
+
+Go back to the jenkins dashboard and manage jenkins 
+
+![image](https://user-images.githubusercontent.com/85988020/188310101-745077c1-af12-4daa-8cf3-28a3bf0464f2.png)
+
+Click on global tool configuration 
+
+![image](https://user-images.githubusercontent.com/85988020/188310112-2d739633-2e1c-423f-88e3-a0eac7796692.png)
+
+In the Maven installation add the maven installation path or we can also go with installed automatically.
+
+![image](https://user-images.githubusercontent.com/85988020/188310169-9551525b-efe1-4c8b-a7e1-765149718909.png)
+
+Click on save and apply
+
+![image](https://user-images.githubusercontent.com/85988020/188310220-8d260dc0-3ffb-4a10-a9b7-501aa6478912.png)
+
+Go back to jenkins Dashboard and click on manage jenkins
 
 
+![image](https://user-images.githubusercontent.com/85988020/188310245-825114e1-8551-433d-ab92-d639330813fc.png)
 
+After that click on Manage credentails
+
+![image](https://user-images.githubusercontent.com/85988020/188310278-cd584a0d-07e7-4462-87ef-e69ff019706d.png)
+
+After click on Add credentials
+
+![image](https://user-images.githubusercontent.com/85988020/188310372-282e8f96-0440-4995-84c2-9034abce4f35.png)
+
+Fill the following details and click on save
+
+![image](https://user-images.githubusercontent.com/85988020/188310407-1e5675bb-b942-434c-b6cd-9bb87ae6b555.png)
+
+The same process for kubernetes intergration
+
+![image](https://user-images.githubusercontent.com/85988020/188310482-0c0c88e4-cc79-483d-9f33-0ab3784ba95a.png)
+
+Click on new item 
+
+![image](https://user-images.githubusercontent.com/85988020/188310569-3b0e26f5-bfcb-4c48-b5e7-ddbf2c13e3c7.png)
+
+Give a new to your project and click on pipeline
+
+![image](https://user-images.githubusercontent.com/85988020/188310592-c67de7e5-c425-471b-b5c0-72a082f08dbf.png)
+
+In the Build Triggers click on GitHub hook trigger for GITScm polling
+
+![image](https://user-images.githubusercontent.com/85988020/188310660-fb96ffab-e8bf-4745-b26d-04a68b5ec399.png)
+
+In the pipeline section choose the pipeline script and add the following lines.
+
+```
+pipeline {
+  environment {
+    registry = '646094415288.dkr.ecr.ap-south-1.amazonaws.com/java_poc'
+    registryCredential = 'AWS_POC'
+    dockerImage = '646094415288.dkr.ecr.ap-south-1.amazonaws.com/java_poc'
+  }
+    agent any    
+    stages {
+        stage('clone code') {
+            steps {
+               checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-creds', url: 'https://github.com/Md-Danish-eng/springbootjavaeks.git']]])
+            }
+        }    
+
+        stage('build') {
+            steps {
+              sh 'mvn clean install'
+              sh 'whoami'
+                
+            }
+        } 
+        stage('Building image') {
+            steps{
+                script {
+                     dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
+      }
+    }
+    
+        stage('push to ECR') {
+            steps {
+              sh 'aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 646094415288.dkr.ecr.ap-south-1.amazonaws.com'
+              sh 'docker build -t java_poc:$BUILD_NUMBER .'
+              sh 'docker tag java_poc:$BUILD_NUMBER 646094415288.dkr.ecr.ap-south-1.amazonaws.com/java_poc:$BUILD_NUMBER'
+              sh 'docker push 646094415288.dkr.ecr.ap-south-1.amazonaws.com/java_poc:$BUILD_NUMBER'
+                }
+        }
+
+        stage('Deploy eks') {
+            steps{
+                script {
+                    
+                    // sh 'kubectl rollout restart deployment spring-boot.yaml' 
+                    kubernetesDeploy(configs: "spring-boot.yaml", kubeconfigId: "kubernetes", enableConfigSubstitution: "true")
+
+        }
+      }
+    }
+  }  
+}
+
+```
+
+Click on apply and save
+
+![image](https://user-images.githubusercontent.com/85988020/188310724-564d71b2-0daf-44fa-aaab-aa9816024a45.png)
+
+After done the all configuration click on build now
+
+![image](https://user-images.githubusercontent.com/85988020/188310777-610cfa07-e6ac-4f3a-9722-696031d953db.png)
+
+After that check the console output.
+
+![image](https://user-images.githubusercontent.com/85988020/188310827-5e481d1e-9c25-436f-b68c-74f7fbd2c172.png)
+
+![image](https://user-images.githubusercontent.com/85988020/188310868-5a6a19af-3d6e-4121-aadc-5c3edcb82e51.png)
+
+The Overall pipeline flow
+
+![image](https://user-images.githubusercontent.com/85988020/188310884-a5d08f2f-8d58-4575-9f89-2d6193dc696d.png)
+
+Every time we buid the jenkins pipeline a new image build and store the newly image into ECR.
+
+![image](https://user-images.githubusercontent.com/85988020/188310935-39339732-5e9f-4586-8eb9-ffaf5966cb90.png)
+
+After successfully build jenkins pipeline, go to eks server and check the pods by running the follwoing command.
+
+![image](https://user-images.githubusercontent.com/85988020/188311027-56b06731-e458-4bdd-93fe-c3aecbe84b87.png)
+
+Check the service by running the follwoing command.
+
+![image](https://user-images.githubusercontent.com/85988020/188311131-e8075b49-dd5f-46e3-b5d5-28af9b96111f.png)
+
+Go to the chrome browser and paste the load balancer link and attached /welcome with that link
+
+![image](https://user-images.githubusercontent.com/85988020/188311200-17c75e52-b45d-48f4-8237-c962eb35c608.png)
 
