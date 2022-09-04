@@ -243,7 +243,9 @@ First Go to ```AWS console``` and install an ```ubuntu 20.04``` server by follwo
 
 ![image](https://user-images.githubusercontent.com/85988020/188310407-1e5675bb-b942-434c-b6cd-9bb87ae6b555.png)
 
-### The same process for kubernetes intergration
+### The same process for kubernetes intergration ``` Do SSH on the server in which EKS master had installed and copy the entire content of the following file:
+
+```sudo cat ~/.kube/config```
 
 ![image](https://user-images.githubusercontent.com/85988020/188310482-0c0c88e4-cc79-483d-9f33-0ab3784ba95a.png)
 
