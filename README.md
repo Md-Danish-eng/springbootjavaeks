@@ -315,7 +315,7 @@ pipeline {
 
 ```
 
-### In the jenkins ci/cd pipeline it did two changes for reflect whenever i change in the content ```src/main/java/com/springboot/app/WelcomeController.java```
+### In the jenkins ci/cd pipeline it did two changes for reflect whenever i change in the content in the following path ```src/main/java/com/springboot/app/WelcomeController.java```
 
 1: I use ```$BUILD_NUMBER``` instead of using latest tag
 
