@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class WelcomeController {
  @GetMapping("/welcome")
 	public String welcome() {
-	 return "Hurray!!!";
+	 return "Hurray!!! You successfully deploy sample Java application on EKS using Jenkins ci/cd pipeline";
  }
 }
