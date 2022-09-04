@@ -96,6 +96,16 @@ First Go to ```AWS console``` and install an ```ubuntu 20.04``` server by follwo
 
 ![image](https://user-images.githubusercontent.com/85988020/188312762-affce0e4-d858-4e25-8e29-082d012934a1.png)
 
+### Go to AWS console and create an IAM user and store the ```ACCESS_KEY_ID``` & ```SECRET_ACCESS_KEY_ID``` into the ```jenkins credentials``` ( It require to push the image into ECR ) Create an IAM role with below permission and attach this IAM role to the instance in which jenkins had installed so that it login to the ECR repo. 
+
+### IAM USER
+
+![image](https://user-images.githubusercontent.com/85988020/188314957-354e706d-821b-4d51-97dd-ed74941909b6.png)
+
+### IAM role
+
+![image](https://user-images.githubusercontent.com/85988020/188314989-08b14b1f-d857-497d-9953-329c345dc85b.png)
+
 ## Install the other required things also.
 
 ### Install awscli by run the following commands
@@ -305,9 +315,65 @@ pipeline {
 
 ```
 
+### In the jenkins ci/cd pipeline it did two changes for reflect whenever i change in the content ```src/main/java/com/springboot/app/WelcomeController.java```
+
+1: I use ```$BUILD_NUMBER``` instead of using latest tag
+
+2: enableConfigSubstitution: "true" in the jenkins pipeline
+
+### spring-boot.yaml
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-boot-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: spring-boot-app
+  template:
+    metadata:
+      labels:
+        app: spring-boot-app
+    spec:
+      containers:
+      - name: spring-boot-app
+        image: 646094415288.dkr.ecr.ap-south-1.amazonaws.com/java_poc:${BUILD_NUMBER}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+# service type loadbalancers
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-boot-svc
+spec:
+  selector:
+    app: spring-boot-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer
+  
+  ```
+
 ```Click on apply and save```
 
 ![image](https://user-images.githubusercontent.com/85988020/188310724-564d71b2-0daf-44fa-aaab-aa9816024a45.png)
+
+Before click on build the jenkins project run the following commands on that server in wchich eks master had installed otherwise it shows the following error.
+
+![image](https://user-images.githubusercontent.com/85988020/188315243-f671504b-aafc-4810-94e0-3814266768ac.png)
+
+### set a clusterrole as cluster-admin
+
+By default, clusterrolebinding has system:anonymous set which blocks the cluster access. Execute the following command to set a clusterrole as cluster-admin which will give you the required access.
+
+```kubectl create clusterrolebinding cluster-system-anonymous --clusterrole=cluster-admin --user=system:anonymous```
 
 ### After done the all configuration click on build now
 
