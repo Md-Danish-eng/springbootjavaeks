@@ -40,7 +40,7 @@ First Go to ```AWS console``` and install an ```ubuntu 20.04``` server by follwo
 
 ![image](https://user-images.githubusercontent.com/85988020/188131650-dec0809c-fdc3-415a-bad6-c168ec93bfc6.png)
 
-### Keep everything default and click on ```Next: Add Tags```
+### Keep everything default and click on ```Next Add Tags```
 
 ![image](https://user-images.githubusercontent.com/85988020/188131984-d27eb40d-9552-4d97-b1a4-b9f8538099a4.png)
 
@@ -48,7 +48,7 @@ First Go to ```AWS console``` and install an ```ubuntu 20.04``` server by follwo
 
 ![image](https://user-images.githubusercontent.com/85988020/187847261-a895ba3b-b1ca-46d8-8289-3d4be5cfd66d.png)
 
-### Here you can add security rules, in my case i choose ``All traffic rules allow``` after that click on ```Review and Launch```
+### Here you can add security rules, in my case i choose ```All traffic rules allow``` after that click on ```Review and Launch```
 
 ![image](https://user-images.githubusercontent.com/85988020/187847881-646d0f2c-87f6-4a7f-9f4c-9c0d6cd58ba0.png)
 
