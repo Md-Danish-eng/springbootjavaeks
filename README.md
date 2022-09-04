@@ -339,5 +339,14 @@ Check the service by running the follwoing command.
 
 Go to the chrome browser and paste the load balancer link and attached /welcome with that link
 
-![image](https://user-images.githubusercontent.com/85988020/188311200-17c75e52-b45d-48f4-8237-c962eb35c608.png)
+![image](https://user-images.githubusercontent.com/85988020/188311377-e0a3830f-8a38-40d0-a565-a9c04fe60282.png)
+
+For webhook go to guthub repo and click on settings
+
+![image](https://user-images.githubusercontent.com/85988020/188311505-514ad5a3-d87b-49b6-999b-c5e9e73ecd59.png)
+
+From here we can add the webhook
+
+![image](https://user-images.githubusercontent.com/85988020/188311441-2c5818f3-f24e-4d2c-bac3-2c8505988e3b.png)
+
 
