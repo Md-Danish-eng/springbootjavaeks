@@ -405,7 +405,7 @@ By default, clusterrolebinding has system:anonymous set which blocks the cluster
 
 ![image](https://user-images.githubusercontent.com/85988020/188311377-e0a3830f-8a38-40d0-a565-a9c04fe60282.png)
 
-### For webhook go to guthub repo and click on settings
+### For webhook go to github repo and click on settings
 
 ![image](https://user-images.githubusercontent.com/85988020/188311505-514ad5a3-d87b-49b6-999b-c5e9e73ecd59.png)
 
@@ -413,4 +413,4 @@ By default, clusterrolebinding has system:anonymous set which blocks the cluster
 
 ![image](https://user-images.githubusercontent.com/85988020/188311441-2c5818f3-f24e-4d2c-bac3-2c8505988e3b.png)
 
-```HAPPY LEARNING```
+```HAPPY LEARNING (:```
