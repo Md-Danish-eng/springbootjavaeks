@@ -409,11 +409,11 @@ By default, clusterrolebinding has system:anonymous set which blocks the cluster
 
 ### For webhook go to github repo and click on settings
 
-![image](https://user-images.githubusercontent.com/85988020/188311505-514ad5a3-d87b-49b6-999b-c5e9e73ecd59.png)
+![image](https://user-images.githubusercontent.com/85988020/188311441-2c5818f3-f24e-4d2c-bac3-2c8505988e3b.png)
 
 ### From here we can add the webhook
 
-![image](https://user-images.githubusercontent.com/85988020/188311441-2c5818f3-f24e-4d2c-bac3-2c8505988e3b.png)
+![image](https://user-images.githubusercontent.com/85988020/188311505-514ad5a3-d87b-49b6-999b-c5e9e73ecd59.png)
 
 ### Here is the Document link which i follow for this POC.
 
